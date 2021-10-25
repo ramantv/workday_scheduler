@@ -71,6 +71,13 @@ function loadWorkDaySchedule() {
   }
 }
 
+// displays data in time slots
+function displayWorkDaySchedule() {
+  workDaySchedule.forEach(function (hour) {
+    $("#" + hour.id).val(hour.hourDetails);
+  });
+}
+
 // to set the dispay css class based on past present or future hour for color coding.
 function getDisplayClassForHour(hr) {
   var dispClass = "";
@@ -123,9 +130,28 @@ function createTimeBlocksforDisplay() {
   });
 }
 
+function onSaveButtonClick(event) {
+  event.preventDefault();
+
+  // saving the hour details into the workDaySchedule
+  var saveIndex = $(this).siblings(".description").children().attr("id");
+  var details = $(this).siblings(".description").children().val();
+
+  console.log("" + saveIndex + " -> " + details);
+  workDaySchedule[saveIndex].hourDetails = details;
+
+  saveWorkDaySchedule();
+  displayWorkDaySchedule();
+}
+
 $(document).ready(function () {
   initializeWorkDaySchedule();
   setTodaysDate();
   createTimeBlocksforDisplay();
   loadWorkDaySchedule();
+
+  // To save hourly plan details when the save button is clicked.
+  $(".saveBtn").on("click", onSaveButtonClick);
+
+  displayWorkDaySchedule();
 });
