@@ -15,7 +15,7 @@ I took the starter code that was supplied and added the following functionality 
 ![Workday scheduler](./assets/images/Raman-Workday-Scheduler.gif)
 
 ## Deployed URL
-![Deployed Application](https://ramantv.github.io/workday_scheduler/)
+[Deployed Application](https://ramantv.github.io/workday_scheduler/)
 
 ## Repository
-![Github Repository](https://github.com/ramantv/workday_scheduler)
+[Github Repository](https://github.com/ramantv/workday_scheduler)
