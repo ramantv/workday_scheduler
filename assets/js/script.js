@@ -33,21 +33,16 @@ function setTodaysDate() {
   $("#currentDay").text(today);
 }
 
-//saves data to localStorage
-function savePlannerData() {
-  localStorage.setItem("workDaySchedule", JSON.stringify(workDaySchedule));
-}
-
 // Initialized the workDay with an empty array of hourPlanner objects
-function initializePlannerData() {
+function initializeWorkDaySchedule() {
   var arrIndex = 0;
   var hrDetail = "";
   var dispHr = "";
   var ampm = "";
 
   for (let hr = workdayStartHour; hr <= workdayEndHour; hr++) {
-    arrIndex = hr - 9; // to save the index of the hour. 0 is 9am, 1 is 10am etc
-    dispHr = getDisplayHour(hr); // the actual hour. 9, 10, 11, 12, 1...5
+    arrIndex = hr - 9; // to save the index of the hour. 0 is 9am, 1 is 10am etc. (is this really required??)
+    dispHr = getDisplayHour(hr); // the actual hour corresponding to the 24hr format hour. As in 9, 10, 11, 12, 1...5 etc.
     ampm = getAMorPMforHour(hr); // the am or pm tag based on the 24 hour time.
 
     hourPlanner = {
@@ -62,48 +57,75 @@ function initializePlannerData() {
   }
 }
 
-// creates the display emalements for the workday schedule
-function createTimeBlocksforDisplay() {
+//to save the workDay Schedule to localStorage
+function saveWorkDaySchedule() {
+  localStorage.setItem("workDaySchedule", JSON.stringify(workDaySchedule));
+}
 
-  workDaySchedule.forEach(function (hrPlan) {
+// To load the workDay schedule from local storage.
+function loadWorkDaySchedule() {
+  var scheduleLoaded = JSON.parse(localStorage.getItem("workDaySchedule"));
+
+  if (scheduleLoaded) {
+    workDaySchedule = scheduleLoaded;
+  }
+}
+
+// to set the dispay css class based on past present or future hour for color coding.
+function getDisplayClassForHour(hr) {
+  var dispClass = "";
+  var curHr = moment().format("HH");
+
+  // compare the supplied hour to current hour and return the color code class accordingly
+  if (hr == curHr) {
+    dispClass = "present";
+  } else if (hr < curHr) {
+    dispClass = "past";
+  } else {
+    //  (hr > curHr)
+    dispClass = "future";
+  }
+
+  return dispClass;
+}
+
+// creates the display elements for the workday schedule
+function createTimeBlocksforDisplay() {
+  // for each hour of the work day, create the timeblock
+  workDaySchedule.forEach(function (theHour) {
     // creates row
     var timeBlock = $("<form>").addClass("row");
 
-    $(".container").append(timeBlock);
-
-    //creates field for time
+    // creates field for time
     var timeField = $("<div>")
       .addClass("col-md-2 hour")
-      .text(hrPlan.displayHour + hrPlan.ampm);
+      .text(theHour.displayHour + theHour.ampm);
 
-    // creates the input data fiels 
+    // creates the input data fields for the hour
     var hourInput = $("<div>").addClass("col-md-9 description p-0");
     var hourData = $("<textarea>");
-    hourData.attr("id", hrPlan.id);
+    hourData.attr("id", theHour.id);
 
-    //compare time to current time - color codes
-    if (hrPlan.time == moment().format("HH")) {
-      hourData.addClass("present");
-    } else if (hrPlan.time < moment().format("HH")) {
-      hourData.addClass("past");
-    } else if (hrPlan.time > moment().format("HH")) {
-      hourData.addClass("future");
-    }
-
+    // set the class for the color codes based on past/present/future hour
+    hourData.addClass(getDisplayClassForHour(theHour.time));
     hourInput.append(hourData);
 
     // create save button for end of row
     var saveIcon = $("<i class='far fa-save fa-lg'></i>");
-    var saveEnd = $("<button>").addClass("col-md-1 saveBtn");
+    var saveButton = $("<button>").addClass("col-md-1 saveBtn");
+    saveButton.append(saveIcon);
 
-    //append elements to row
-    saveEnd.append(saveIcon);
-    timeBlock.append(timeField, hourInput, saveEnd);
+    // append elements to row
+    timeBlock.append(timeField, hourInput, saveButton);
+
+    // append the row to the container
+    $(".container").append(timeBlock);
   });
 }
 
 $(document).ready(function () {
-  initializePlannerData();
+  initializeWorkDaySchedule();
   setTodaysDate();
   createTimeBlocksforDisplay();
+  loadWorkDaySchedule();
 });
