@@ -12,7 +12,7 @@ I took the starter code that was supplied and added the following functionality 
 - When the page loads, it loads saved workday schedule details from local storage and displays it.
 
 ## Screenshot
-![Workday scheduler](./assets/images/Raman-Workday-Scheduler.gif)
+![Workday scheduler](./assets/images/Raman-Workday-Scheduler2.png)
 
 ## Deployed URL
 [Deployed Application](https://ramantv.github.io/workday_scheduler/)
