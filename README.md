@@ -3,7 +3,7 @@
 - It uses BootStrap CSS framework, JQuery and Moment javascript library to work with date and time.
 
 ## General Information
-I took the starter code that was supplied and added the following functionality to it:
+Added the following functionality to the starter code:
 - Updated the header with the current date.
 - Added timeblocks for each hour from 9am to 5pm.
 - Ensured that each timeblock was color coded according as the hour was in the past, present or future.
